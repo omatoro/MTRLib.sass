@@ -1,0 +1,300 @@
+@charset "utf-8";
+/***********************************************************
+CSS3 property
+
+@date 2012/09/24
+***********************************************************/
+@import "utility";
+
+
+/*----------------------------------------------------------
+下記以前のブラウザに対応する必要がある場合は、まだ対応していません
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   5.1  |   11    | 11.62 |   18   |   5.1  | --- | --- | --- | --- |   11    | 11.61 |   18   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+/*----------------------------------------------------------
+対応ブラウザ設定
+----------------------------------------------------------*/
+$SUPPORT_CSS3:           true  !default;
+$SUPPORT_MAC_SAFARI:     false !default;
+$SUPPORT_MAC_FIREFOX:    false !default;
+$SUPPORT_MAC_OPERA:      false !default;
+$SUPPORT_MAC_CHROME:     false !default;
+$SUPPORT_WIN_SAFARI:     false !default;
+$SUPPORT_WIN_IE6:        false !default;
+$SUPPORT_WIN_IE7:        false !default;
+$SUPPORT_WIN_IE8:        false !default;
+$SUPPORT_WIN_IE9:        false !default;
+$SUPPORT_WIN_FIREFOX:    false !default;
+$SUPPORT_WIN_OPERA:      false !default;
+$SUPPORT_WIN_CHROME:     false !default;
+
+
+
+
+
+/*----------------------------------------------------------
+error時に出力する色
+----------------------------------------------------------*/
+$ERROR_COLOR: #ff0000 !default; // 赤に設定
+
+
+/*----------------------------------------------------------
+RGBA
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   ○   |   ○    |  ○   |   ○   |   ○   | ×  | ×  | ×  | ○  |   ○    |  ○   |   ○   |
+-------------------------------------------------------------------------------------------------
+
+■処理内容
+引数の数が3の場合：rgbとして出力する
+引数の数が2以下、5以上の場合：出力しない
+引数の数が4の場合：rgbaを出力する
+
+----------------------------------------------------------*/
+$DEFAULT_rgba: 255,0,0,0.5 !default;
+@function rgba($value...) {
+
+    // 引数が空の場合はデフォルト値を設定する
+    @if(not existed($value...)) {
+        $value: $DEFAULT_rgba;
+    }
+
+    $propertynum: "rgba";
+    $changedproperty: "rgb";
+
+    // 引数の数が3つだった場合はrgbとして出力する
+    @if (length($value) == 3) {
+        $run: warn($ERROR_ID_RGBA_NOTSUPPORT, warnTextChangedProperty($propertynum, $changedproperty));
+        @return rgbTo16(nth($value, 1), nth($value, 2), nth($value, 3));
+    }
+
+    // 引数の数が2以下、5以上だった場合は警告を出してデフォルトカラーを出力する
+    @if (length($value) < 3 or 4 < length($value)) {
+        $run: warn($ERROR_ID_RGBA_NOTSUPPORT, warnTextNotFitArgumentNum($propertynum));
+        @return $ERROR_COLOR;
+    }
+
+    // 以下は引数の数が4となる
+
+    // サポートしている範囲内であればプロパティを生成する
+    @if (($SUPPORT_CSS3) and (not $SUPPORT_WIN_IE6) and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8)) {
+        @return #{"rgba("}nth($value, 1)#{", "}nth($value, 2)#{", "}nth($value, 3)#{", "}nth($value, 4)#{")"};
+    }
+    // サポート外であれば警告文を出力し、rgbで出力する
+    @else {
+        @if ($SUPPORT_WIN_IE6) {$run: warn($ERROR_ID_RGBA_NOTSUPPORT, warnTextNotSupport("IE6", $propertynum)); }
+        @if ($SUPPORT_WIN_IE7) {$run: warn($ERROR_ID_RGBA_NOTSUPPORT, warnTextNotSupport("IE7", $propertynum)); }
+        @if ($SUPPORT_WIN_IE8) {$run: warn($ERROR_ID_RGBA_NOTSUPPORT, warnTextNotSupport("IE8", $propertynum)); }
+
+        // rgbとして出力する
+        $run: warn($ERROR_ID_RGBA_NOTSUPPORT, warnTextChangedProperty($propertynum, $changedproperty));
+        @return rgbTo16(nth($value, 1), nth($value, 2), nth($value, 3));
+    }
+}
+/*----------------------------------------------------------
+HSLA
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   ○   |   ○    |  ○   |   ○   |   ○   | ×  | ×  | ×  | ○  |   ○    |  ○   |   ○   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+$DEFAULT_hsla: 255,0,0,0.5 !default;
+@function hsla($value...) {
+
+    // 引数が空の場合はデフォルト値を設定する
+    @if(not existed($value...)) {
+        $value: $DEFAULT_hsla;
+    }
+
+    $propertynum: "hsla";
+    $changedproperty: "rgba";
+
+    @if (($SUPPORT_CSS3) and (not $SUPPORT_WIN_IE6) and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8)) {
+        @return #{"hsla("}nth($value, 1)#{", "}nth($value, 2)#{"%, "}nth($value, 3)#{"%, "}nth($value, 4)#{")"};
+    }
+    // サポート外であれば警告文を出力し、RGBを出力する
+    @else {
+        @if ($SUPPORT_WIN_IE6) {$run: warn($ERROR_ID_HLSA_NOTSUPPORT, warnTextNotSupport("IE6", $propertynum)); }
+        @if ($SUPPORT_WIN_IE7) {$run: warn($ERROR_ID_HLSA_NOTSUPPORT, warnTextNotSupport("IE7", $propertynum)); }
+        @if ($SUPPORT_WIN_IE8) {$run: warn($ERROR_ID_HLSA_NOTSUPPORT, warnTextNotSupport("IE8", $propertynum)); }
+
+        $run: warn($ERROR_ID_HLSA_NOTSUPPORT, warnTextChangedProperty($propertynum, $changedproperty));
+        $rgba: toRGB(nth($value, 1), nth($value, 2), nth($value, 3), nth($value, 4));
+
+        @return rgba(nth($rgba, 1), nth($rgba, 2), nth($rgba, 3), nth($rgba, 4));
+    }
+}
+/*----------------------------------------------------------
+Border Radius
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   ○   |   ○    |  ○   |   ○   |   ○   | ×  | ×  | ×  | ○  |   ○    |  ○   |   ○   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+$DEFAULT_border_radius: 5px !default;
+@mixin border-radius($value...) {
+
+    // 引数が空の場合はデフォルト値を設定する
+    @if(not existed($value...)) {
+        $value: $DEFAULT_border_radius;
+    }
+
+    $propertynum: "border-radius";
+
+    // サポートしている範囲内であればプロパティを生成する
+    @if (($SUPPORT_CSS3) and (not $SUPPORT_WIN_IE6) and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8)) {
+        // プロパティを作成する
+        @include createVenderPrefix($propertynum, $value...);
+    }
+    // サポート外であれば警告文を出力する
+    @else {
+        @if ($SUPPORT_WIN_IE6) {@include warn($ERROR_ID_BORDER_RADIUS_NOTSUPPORT, warnTextNotSupport("IE6", $propertynum)); }
+        @if ($SUPPORT_WIN_IE7) {@include warn($ERROR_ID_BORDER_RADIUS_NOTSUPPORT, warnTextNotSupport("IE7", $propertynum)); }
+        @if ($SUPPORT_WIN_IE8) {@include warn($ERROR_ID_BORDER_RADIUS_NOTSUPPORT, warnTextNotSupport("IE8", $propertynum)); }
+    }
+}
+/*----------------------------------------------------------
+Box Shadow
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   ○   |   ○    |  ○   |   ○   |   ○   | ×  | ×  | ×  | ○  |   ○    |  ○   |   ○   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+$DEFAULT_box_shadow_color: #292929 !default;
+$DEFAULT_box_shadow: 5px 5px 5px 5px $DEFAULT_box_shadow_color !default;
+$DEFAULT_box_shadow_width:  null !default;
+$DEFAULT_box_shadow_height: null !default;
+@mixin box-shadow($value...) {
+
+    // 引数が空の場合はデフォルト値を設定する
+    @if(not existed($value...)) {
+        $value: $DEFAULT_box_shadow;
+    }
+
+    $propertynum: "box-shadow";
+
+    // サポートしている範囲内であればプロパティを生成する
+    @if (($SUPPORT_CSS3) and (not $SUPPORT_WIN_IE6) and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8)) {
+        // プロパティを作成する
+        @include createVenderPrefix($propertynum, $value...);
+    }
+    @else {
+        // パラメータが設定されているかチェック(設定されていなかったら警告)
+        @if      ($SUPPORT_WIN_IE7 and $DEFAULT_box_shadow_width  == null) { @include warn($ERROR_ID_BOX_SHADOW_NOTSUPPORT, warnTextNoSetIEParam("IE7", $propertynum, "$DEFAULT_box_shadow_width")); }
+        @else if ($SUPPORT_WIN_IE7 and $DEFAULT_box_shadow_height == null) { @include warn($ERROR_ID_BOX_SHADOW_NOTSUPPORT, warnTextNoSetIEParam("IE7", $propertynum, "$DEFAULT_box_shadow_height")); }
+        @else if ($SUPPORT_WIN_IE8 and $DEFAULT_box_shadow_width  == null) { @include warn($ERROR_ID_BOX_SHADOW_NOTSUPPORT, warnTextNoSetIEParam("IE8", $propertynum, "$DEFAULT_box_shadow_width")); }
+        @else if ($SUPPORT_WIN_IE8 and $DEFAULT_box_shadow_height == null) { @include warn($ERROR_ID_BOX_SHADOW_NOTSUPPORT, warnTextNoSetIEParam("IE8", $propertynum, "$DEFAULT_box_shadow_height")); }
+
+        // パラメータが設定済み
+        @else {
+            //@todo box-shadowをIEでも表示するには、影表示用のdivをHTMLに記述しなければならない
+            // @include warn($ERROR_ID_BORDER_RADIUS_NOTSUPPORT, warnTextIETag("div.ie_box_shadow"));
+        }
+
+    }
+}
+/*----------------------------------------------------------
+Opacity
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   ○   |   ○    |  ○   |   ○   |   ○   | ×  | ×  | ×  | ○  |   ○    |  ○   |   ○   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+@mixin opacity($opacity: 0.25) {
+    @if (($SUPPORT_CSS3) and (not $SUPPORT_WIN_IE6) and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8)) {
+        opacity: $opacity;
+    }
+    // IE 5-9用
+    @else {
+        //filter: alpha(opacity=#{$opacity * 100});  // IE独自仕様
+        filter: progid:DXImageTransform.Microsoft.Alpha(opacity=#{$opacity * 100});
+        opacity: $opacity;
+    }
+}
+/*----------------------------------------------------------
+CSS Transitions
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   ○   |   ○    |  ○   |   ○   |   ○   | ×  | ×  | ×  | ×  |   ○    |  ○   |   ○   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+$DEFAULT_border_radius: border !default;
+$DEFAULT_border_radius_speed: 0.1s linear;
+@mixin transition($value...) {
+
+    // 引数が空の場合はデフォルト値を設定する
+    @if(not existed($value...)) {
+        $value: $DEFAULT_border_radius;
+    }
+
+    // 引数が1つの場合は、デフォルトの速度を設定する
+    @if (length($value) == 1) {
+        $value: join($value, $DEFAULT_border_radius_speed, space);
+    }
+
+    $propertynum: "transition";
+
+    // サポートしている範囲内であればプロパティを生成する
+    @if (($SUPPORT_CSS3) and (not $SUPPORT_WIN_IE6) and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8) and (not $SUPPORT_WIN_IE9)) {
+        // プロパティを作成する
+        @include createVenderPrefix($propertynum, $value...);
+    }
+    // サポート外であれば警告文を出力する
+    @else {
+        @if ($SUPPORT_WIN_IE6) {@include warn($ERROR_ID_TRANSITION_NOTSUPPORT, warnTextNotSupport("IE6", $propertynum)); }
+        @if ($SUPPORT_WIN_IE7) {@include warn($ERROR_ID_TRANSITION_NOTSUPPORT, warnTextNotSupport("IE7", $propertynum)); }
+        @if ($SUPPORT_WIN_IE8) {@include warn($ERROR_ID_TRANSITION_NOTSUPPORT, warnTextNotSupport("IE8", $propertynum)); }
+        @if ($SUPPORT_WIN_IE9) {@include warn($ERROR_ID_TRANSITION_NOTSUPPORT, warnTextNotSupport("IE9", $propertynum)); }
+    }
+}
+
+
+
+
+
+
+

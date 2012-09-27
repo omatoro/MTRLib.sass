@@ -1,0 +1,279 @@
+@charset "utf-8";
+/***********************************************************
+utility
+
+@date 2012/09/24
+***********************************************************/
+@import "exparam";
+
+
+
+/*----------------------------------------------------------
+ベンダープレフィックスの使用可否設定
+----------------------------------------------------------*/
+$USE_WEBKIT: true !default; // CSS3利用時に-webkit-を使用するかどうか
+$USE_MOZ:    true !default; // CSS3利用時に-mox-   を使用するかどうか
+$USE_MS:     true !default; // CSS3利用時に-ms-    を使用するかどうか
+$USE_O:      true !default; // CSS3利用時に-o-     を使用するかどうか
+
+/*----------------------------------------------------------
+使用するベンダープレフィックスをリストにする
+ - join関数を利用している理由について
+     joinを使用しなかった場合、リストをさらにリスト化して
+     変数を作成してしまうため、each文で取り出せなくなる
+----------------------------------------------------------*/
+$VENDER_PREFIX: "" !default;
+@if ($USE_O) {
+    $VENDER_PREFIX: join(-o-, $VENDER_PREFIX);
+}
+@if ($USE_MS) {
+    $VENDER_PREFIX: join(-ms-, $VENDER_PREFIX);
+}
+@if ($USE_MOZ) {
+    $VENDER_PREFIX: join(-moz-, $VENDER_PREFIX);
+}
+@if ($USE_WEBKIT) {
+    $VENDER_PREFIX: join(-webkit-, $VENDER_PREFIX);
+}
+
+/*----------------------------------------------------------
+使用するベンダープレフィックスだけを使ってプロパティを作成する
+----------------------------------------------------------*/
+@mixin createVenderPrefix($property, $value...) {
+    @each $prefix in $VENDER_PREFIX {
+        #{$prefix}#{$property}: $value;
+    }
+}
+
+/*----------------------------------------------------------
+hslをrgbに変換する
+----------------------------------------------------------*/
+@function toRGB($h, $s, $l, $a: 1.0) {
+    $r: 0;
+    $g: 0;
+    $b: 0;
+
+    $l: $l / 100.0;
+    $s: $s / 100.0;
+
+    // $hがマイナス値でないようにする
+    @while $h < 0 {
+        $h: $h + 360;
+    }
+
+    $h: $h % 360;
+
+    // 0の場合は色無し
+    @if ($s == 0) {
+        $l: round($l * 255);
+        $r: $l;
+        $g: $l;
+        $b: $l;
+
+        $result: $r, $g, $b, $a;
+        @return $result;
+    }
+
+    $m2: 0;
+
+    @if ($l < 0.5) {
+        $m2: $l * (1 + $s);
+    }
+    @else {
+        $m2: $l + $s - ($l * $s);
+    }
+
+    $m1: $l * 2 - $m2;
+
+    $tmp: $h + 120;
+    @if ($tmp > 360) {
+        $tmp: $tmp - 360;
+    }
+
+    // r:レッド
+    @if ($tmp < 60) {
+        $r: ($m1 + ($m2 - $m1) * $tmp / 60)
+    }
+    @else if ($tmp < 180) {
+        $r: $m2;
+    }
+    @else if ($tmp < 240) {
+        $r: $m1 + ($m2 - $m1) * (240 - $tmp) / 60;
+    }
+    @else {
+        $r: $m1;
+    }
+
+    // g:グリーン
+    $tmp: $h;
+    @if ($tmp < 60) {
+        $g: $m1 + ($m2 - $m1) * $tmp / 60;
+    }
+    @else if ($tmp < 180) {
+        $g: $m2;
+    }
+    @else if ($tmp < 240) {
+        $g: $m1 + ($m2 - $m1) * (240 - $tmp) / 60;
+    }
+    @else {
+        $g: $m1;
+    }
+
+    // b:ブルー
+    $tmp: $h - 120;
+    @if ($tmp < 0) {
+        $tmp: $tmp + 360;
+    }
+    @if ($tmp < 60) {
+        $b: $m1 + ($m2 - $m1) * $tmp / 60;
+    }
+    @else if ($tmp < 180) {
+        $b: $m2;
+    }
+    @else if ($tmp < 240) {
+        $b: $m1 + ($m2 - $m1) * (240 - $tmp) / 60;
+    }
+    @else {
+        $b: $m1;
+    }
+
+    // 0 ～ 255 のRGB方式に合わせる
+    $r: round($r * 255);
+    $g: round($g * 255);
+    $b: round($b * 255);
+
+    $result: $r, $g, $b, $a;
+    @return $result;
+}
+
+/*----------------------------------------------------------
+error出力レベル
+@todo ONCE_WARN機能しない
+----------------------------------------------------------*/
+$NOT_WARN:  0;
+$ONCE_WARN: 1;
+$ALL_WARN:  2;
+
+
+$ERROR_ID_RGBA_NOTSUPPORT:    $ALL_WARN !default;
+$ERROR_ID_HLSA_NOTSUPPORT:    $ALL_WARN !default;
+
+
+$ERROR_ID_TRANSITION_NOTSUPPORT:    $ALL_WARN !default;
+$ERROR_ID_BORDER_RADIUS_NOTSUPPORT: $ALL_WARN !default;
+
+/*----------------------------------------------------------
+警告表示用
+----------------------------------------------------------*/
+@mixin warn($warn_level, $warn_comment) {
+    @if ($warn_level == $ALL_WARN) {
+        // 全て警告を表示する
+        @warn $warn_comment;
+    }
+    @if ($warn_level == $NOT_WARN) {
+        // 警告しない
+    }
+}
+@function warnTextNotSupport($browser_name, $property) {
+    @return "#{$browser_name}対応案件のため、#{$property}は無効になりました。";
+}
+@function warnTextChangedProperty($property, $changedproperty) {
+    @return "#{$property}は#{$changedproperty}に変更しました。";
+}
+@function warnTextNotFitArgumentNum($property) {
+    @return "引数の数が合っていないため、#{$property}は無効になりました。";
+}
+@function warnTextAddProperty($browser_name, $addproperty) {
+    @return "#{$browser_name}対応案件のため、#{$addproperty}を追加しました。";
+}
+@function warnTextNoSetIEParam($browser_name, $property, $paramname) {
+    @return "#{$property}対応案件のため#{$property}をIE用に変更しようとしましたが、#{$paramname}が設定されていません。";
+}
+@function warnTextIETag($paramname) {
+    @return "IEに対応させるために、#{$paramname}で現在のブロックを囲むようHTMLに記述してください。";
+}
+
+@function warn($warn_level, $warn_comment) {
+    @if ($warn_level == $ALL_WARN) {
+        // 全て警告を表示する
+        @warn $warn_comment;
+    }
+    @if ($warn_level == $NOT_WARN) {
+        // 警告しない
+    }
+    @return 0;
+}
+
+
+/*----------------------------------------------------------
+可変長引数が空の値を受け取ったか判別する
+----------------------------------------------------------*/
+@function existed($value...) {
+    @if(length($value) == 0) {
+        @return false;
+    }
+    @else {
+        @return true;
+    }
+}
+
+/*----------------------------------------------------------
+16進数に変換する
+----------------------------------------------------------*/
+@function to16String($num) {
+    @if (0 <= $num and $num <= 9) {
+        @return $num;
+    }
+    @else if ($num == 10) { @return A; }
+    @else if ($num == 11) { @return B; }
+    @else if ($num == 12) { @return C; }
+    @else if ($num == 13) { @return D; }
+    @else if ($num == 14) { @return E; }
+    @else if ($num == 15) { @return F; }
+
+    @return null;
+}
+
+@function to16($num) {
+    $result: null;
+
+    // $numを四捨五入で整数にする
+    $num: round($num);
+
+    // 値は0から255で収める
+    @if ($num > 255) {
+        $num: 255;
+    }
+    @else if ($num < 0) {
+        $num: 0;
+    }
+
+    // 16進数に変換する
+    @while ($num != 0) {
+        $result: #{to16String($num % 16)}#{$result};
+        $num: $num / 16;
+        $num: floor($num); // 小数点切り捨て
+    }
+
+    @return $result;
+}
+
+/*----------------------------------------------------------
+rgbaを16進数表記に変換する
+----------------------------------------------------------*/
+@function rgbaTo16($red, $green, $blue, $alpha) {
+    @return #{"#"}#{to16($red)}#{to16($green)}#{to16($blue)}#{to16($alpha*255)};
+}
+@function rgbTo16($red, $green, $blue) {
+    @return #{"#"}#{to16($red)}#{to16($green)}#{to16($blue)};
+}
+
+
+/***********************************************************
+IE独自仕様に関する処理
+***********************************************************/
+@mixin IEHACKrgba16($value) {
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#{$value}', endColorstr='#{$value}');
+}
+
+
