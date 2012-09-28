@@ -8,13 +8,82 @@ utility
 
 
 
+
+/*----------------------------------------------------------
+下記以前のブラウザに対応する必要がある場合は、まだ対応していません
+
+■対応ブラウザ
+-------------------------------------------------------------------------------------------------
+|                 MAC               |                            WIN                            |
+|-----------------------------------|-----------------------------------------------------------|
+| SAFARI | FIREFOX | OPERA | CHROME | SAFARI | IE6 | IE7 | IE8 | IE9 | FIREFOX | OPERA | CHROME |
+|-----------------------------------|-----------------------------------------------------------|
+|   5.1  |   11    | 11.62 |   18   |   5.1  | --- | --- | --- | --- |   11    | 11.61 |   18   |
+-------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------*/
+/*----------------------------------------------------------
+対応ブラウザ設定
+----------------------------------------------------------*/
+$SUPPORT_CSS3:           true  !default;
+$SUPPORT_MAC_SAFARI:     true  !default;
+$SUPPORT_MAC_FIREFOX:    true  !default;
+$SUPPORT_MAC_OPERA:      true  !default;
+$SUPPORT_MAC_CHROME:     true  !default;
+$SUPPORT_WIN_SAFARI:     true  !default;
+$SUPPORT_WIN_IE6:        false !default;
+$SUPPORT_WIN_IE7:        false !default;
+$SUPPORT_WIN_IE8:        false !default;
+$SUPPORT_WIN_IE9:        false !default;
+$SUPPORT_WIN_FIREFOX:    true  !default;
+$SUPPORT_WIN_OPERA:      true  !default;
+$SUPPORT_WIN_CHROME:     true  !default;
+
+
+/*----------------------------------------------------------
+error時に出力する色
+----------------------------------------------------------*/
+$ERROR_COLOR: #ff0000 !default; // 赤に設定
+
+
 /*----------------------------------------------------------
 ベンダープレフィックスの使用可否設定
 ----------------------------------------------------------*/
-$USE_WEBKIT: true !default; // CSS3利用時に-webkit-を使用するかどうか
-$USE_MOZ:    true !default; // CSS3利用時に-mox-   を使用するかどうか
-$USE_MS:     true !default; // CSS3利用時に-ms-    を使用するかどうか
-$USE_O:      true !default; // CSS3利用時に-o-     を使用するかどうか
+$NOTSUPPORT_SAFARI:  false;
+$NOTSUPPORT_CHROME:  false;
+$NOTSUPPORT_FIREFOX: false;
+$NOTSUPPORT_IE:      false;
+$NOTSUPPORT_OPERA:   false;
+
+// サファリに対応する必要が無い場合
+@if ((not $SUPPORT_MAC_SAFARI)  and (not $SUPPORT_WIN_SAFARI))  { $NOTSUPPORT_SAFARI: true; }
+// Chromeに対応する必要が無い場合
+@if ((not $SUPPORT_MAC_CHROME)  and (not $SUPPORT_WIN_CHROME))  { $NOTSUPPORT_CHROME: true; }
+// FIREFOXに対応する必要が無い場合
+@if ((not $SUPPORT_MAC_FIREFOX) and (not $SUPPORT_WIN_FIREFOX)) { $NOTSUPPORT_FIREFOX: true; }
+// IEに対応する必要が無い場合
+@if ((not $SUPPORT_WIN_IE6)     and (not $SUPPORT_WIN_IE7) and (not $SUPPORT_WIN_IE8) and (not $SUPPORT_WIN_IE9)) { $NOTSUPPORT_IE: true; }
+// Operaに対応する必要が無い場合
+@if ((not $SUPPORT_MAC_OPERA)   and (not $SUPPORT_WIN_OPERA))   { $NOTSUPPORT_OPERA: true; }
+
+$NOTSUPPORT_WEBKIT: false;
+$NOTSUPPORT_MOZ:    false;
+$NOTSUPPORT_O:      false;
+$NOTSUPPORT_MS:     false;
+
+// webkitに対応する必要が無い場合
+@if ($NOTSUPPORT_SAFARI and $NOTSUPPORT_CHROME) { $NOTSUPPORT_WEBKIT: true; }
+// mozに対応する必要が無い場合
+@if ($NOTSUPPORT_FIREFOX)                       { $NOTSUPPORT_MOZ: true; }
+// oに対応する必要が無い場合
+@if ($NOTSUPPORT_OPERA)                         { $NOTSUPPORT_O: true; }
+// msに対応する必要がない場合
+@if ($NOTSUPPORT_IE)                            { $NOTSUPPORT_MS: true; }
+
+$USE_WEBKIT: (not $NOTSUPPORT_WEBKIT) !default; // CSS3利用時に-webkit-を使用するかどうか
+$USE_MOZ:    (not $NOTSUPPORT_MOZ)    !default; // CSS3利用時に-mox-   を使用するかどうか
+$USE_MS:     (not $NOTSUPPORT_MS)     !default; // CSS3利用時に-ms-    を使用するかどうか
+$USE_O:      (not $NOTSUPPORT_O)      !default; // CSS3利用時に-o-     を使用するかどうか
 
 /*----------------------------------------------------------
 使用するベンダープレフィックスをリストにする

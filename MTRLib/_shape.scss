@@ -1,0 +1,394 @@
+@charset "utf-8";
+/***********************************************************
+shape
+
+@date 2012/09/24
+***********************************************************/
+/*----------------------------------------------------------
+デフォルト値
+----------------------------------------------------------*/
+$DEFAULT_SIZE:    50px    !default;
+$DEFAULT_COLOR:   #FF0000 !default;
+
+$INI_HOVER_COLOR: #00FF00;
+$HOVER_COLOR:     #00FF00 !default;
+$HOVER_COLOR_ANIM_SPEED: 0.2s !default;
+
+/*----------------------------------------------------------
+正方形
+----------------------------------------------------------*/
+@mixin square(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width: $size;
+    height: $size;
+    background-color: $color;
+
+    // hover時のアニメーション
+    @include transition(background-color $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        background-color: $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+四角
+----------------------------------------------------------*/
+@mixin rect(
+    $width: $DEFAULT_SIZE,
+    $height: $DEFAULT_SIZE / 2,
+    $color: $DEFAULT_COLOR) {
+
+    width: $width;
+    height: $height;
+    background-color: $color;
+
+    // hover時のアニメーション
+    @include transition(background-color $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        background-color: $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+円
+----------------------------------------------------------*/
+@mixin circle(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width: $size;
+    height: $size;
+    background-color: $color;
+
+    @include border-radius($size / 2);
+
+    // hover時のアニメーション
+    @include transition(background-color $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        background-color: $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+楕円
+----------------------------------------------------------*/
+@mixin oval(
+    $width: $DEFAULT_SIZE,
+    $height: $DEFAULT_SIZE / 2,
+    $color: $DEFAULT_COLOR) {
+
+    width: $width;
+    height: $height;
+    background-color: $color;
+    @include border-radius(#{$width/2} / #{$height/2});
+
+    // hover時のアニメーション
+    @include transition(background-color $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        background-color: $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 左向き
+----------------------------------------------------------*/
+@mixin triangleLeft(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-top:    ($size * 0.5)  solid transparent;
+    border-right:  ($size * 0.87) solid $color;
+    border-bottom: ($size * 0.5)  solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-right $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-right: ($size * 0.87) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+
+}
+
+@mixin triangleLeftMini(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-top:    ($size * 0.5)  solid transparent;
+    border-right:  ($size * 0.43) solid $color;
+    border-bottom: ($size * 0.5)  solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-right $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-right:  ($size * 0.43) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 下向き
+----------------------------------------------------------*/
+@mixin triangleBottom(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width: 0;
+    height: 0;
+    border-top:   ($size * 0.87) solid $color;
+    border-left:  ($size * 0.5)  solid transparent;
+    border-right: ($size * 0.5)  solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-top $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-top:   ($size * 0.87) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 右向き
+----------------------------------------------------------*/
+@mixin triangleRight(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-top:    ($size * 0.5)  solid transparent;
+    border-left:   ($size * 0.87) solid $color;
+    border-bottom: ($size * 0.5)  solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-left $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-left: ($size * 0.87) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+@mixin triangleRightMini(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-top:    ($size * 0.5)  solid transparent;
+    border-left:   ($size * 0.43) solid $color;
+    border-bottom: ($size * 0.5)  solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-left $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-left: ($size * 0.43) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 上向き
+----------------------------------------------------------*/
+@mixin triangleUp (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width: 0;
+    height: 0;
+    border-left:   ($size * 0.5)  solid transparent;
+    border-right:  ($size * 0.5)  solid transparent;
+    border-bottom: ($size * 0.87) solid $color;
+
+    // hover時のアニメーション
+    @include transition(border-bottom $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-bottom: ($size * 0.87) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 左上向き
+----------------------------------------------------------*/
+@mixin triangleUpLeft (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-top:   $size solid $color;
+    border-right: $size solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-top $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-top: $size solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 左下向き
+----------------------------------------------------------*/
+@mixin triangleBottomLeft (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-bottom: $size solid $color;
+    border-right:  $size solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-bottom $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-bottom: $size solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 右下向き
+----------------------------------------------------------*/
+@mixin triangleBottomRight (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-bottom: $size solid $color;
+    border-left:   $size solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-bottom $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-bottom: $size solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+三角形 - 右上向き
+----------------------------------------------------------*/
+@mixin triangleUpRight (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  0;
+    height: 0;
+    border-top:  $size solid $color;
+    border-left: $size solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-top $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-top:  $size solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
+/*----------------------------------------------------------
+台形
+----------------------------------------------------------*/
+@mixin trapezoid (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  $size / 2;
+    height: 0;
+    border-bottom: ($size / 2) solid $color;
+    border-left:   ($size / 4) solid transparent;
+    border-right:  ($size / 4) solid transparent;
+
+    // hover時のアニメーション
+    @include transition(border-bottom $HOVER_COLOR_ANIM_SPEED linear);
+
+    // hover時の動作設定は@contentで拡張する
+    &:hover {
+        @content;
+        border-bottom: ($size / 2) solid $HOVER_COLOR;
+
+        // 初期化
+        $HOVER_COLOR: $INI_HOVER_COLOR;
+    }
+}
+
