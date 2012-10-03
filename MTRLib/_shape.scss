@@ -2,17 +2,17 @@
 /***********************************************************
 shape
 
-@date 2012/09/24
+@date 2012/10/03
 ***********************************************************/
 /*----------------------------------------------------------
 デフォルト値
 ----------------------------------------------------------*/
-$DEFAULT_SIZE:    50px    !default;
-$DEFAULT_COLOR:   #FF0000 !default;
+$DEFAULT_SIZE: 50px !default;
+$DEFAULT_COLOR: #FF0000 !default;
 
 $INI_HOVER_COLOR: #00FF00;
 $HOVER_COLOR:     #00FF00 !default;
-$HOVER_COLOR_ANIM_SPEED: 0.2s !default;
+$HOVER_COLOR_ANIM_SPEED: 0.1s !default;
 
 /*----------------------------------------------------------
 正方形
@@ -391,4 +391,699 @@ $HOVER_COLOR_ANIM_SPEED: 0.2s !default;
         $HOVER_COLOR: $INI_HOVER_COLOR;
     }
 }
+
+/*----------------------------------------------------------
+平行四辺形
+----------------------------------------------------------*/
+@mixin parallelogram (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR) {
+
+    width:  $size;
+    height: $size * 0.8;
+    -webkit-transform: skew(20deg);
+       -moz-transform: skew(20deg);
+         -o-transform: skew(20deg);
+    background: $color;
+}
+
+/*----------------------------------------------------------
+六芒星
+----------------------------------------------------------*/
+@mixin sixStar (
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    width:  0;
+    height: 0;
+    border-left:   $size*0.5 solid transparent;
+    border-right:  $size*0.5 solid transparent;
+    border-bottom: $size     solid $color;
+    margin-bottom: $margin + $size*0.3;
+    position: relative;
+
+    &:after {
+        width:  0;
+        height: 0;
+        border-left:   $size*0.5 solid transparent;
+        border-right:  $size*0.5 solid transparent;
+        border-top:    $size     solid $color;
+
+        position: absolute;
+        content: "";
+        top:   $size*0.3;
+        left:  -$size*0.5;
+    }
+}
+
+/*----------------------------------------------------------
+星型
+----------------------------------------------------------*/
+@mixin fiveStar (
+    $size: $DEFAULT_SIZE*0.27,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    margin: $size*1.28+$margin $margin $size*1.28+$margin $margin;
+    position: relative;
+    display: block;
+    color: $color;
+    width: 0px;
+    height: 0px;
+    border-right:  $size*2.0 solid transparent;
+    border-bottom: $size*1.4 solid $color;
+    border-left:   $size*2.0 solid transparent;
+    -moz-transform:    rotate(35deg);
+    -webkit-transform: rotate(35deg);
+    -ms-transform:     rotate(35deg);
+    -o-transform:      rotate(35deg);
+
+    &:before {
+        border-bottom: $size*1.6 solid $color;
+        border-left:   $size*0.6 solid transparent;
+        border-right:  $size*0.6 solid transparent;
+        position: absolute;
+        height: 0;
+        width:  0;
+        top:  -$size*0.9;
+        left: -$size*1.3;
+        display: block;
+        content: '';
+        -webkit-transform: rotate(-35deg);
+        -moz-transform:    rotate(-35deg);
+        -ms-transform:     rotate(-35deg);
+        -o-transform:      rotate(-35deg);
+    }
+
+    &:after {
+        position: absolute;
+        display: block;
+        color: $color;
+        top:   $size*0.06;
+        left:  -$size*2.1;
+        width: 0px;
+        height: 0px;
+        border-right:  $size*2.0 solid transparent;
+        border-bottom: $size*1.4 solid $color;
+        border-left:   $size*2.0 solid transparent;
+        -webkit-transform: rotate(-70deg);
+        -moz-transform:    rotate(-70deg);
+        -ms-transform:     rotate(-70deg);
+        -o-transform:      rotate(-70deg);
+        content: '';
+    }
+}
+
+/*----------------------------------------------------------
+五角形
+----------------------------------------------------------*/
+@mixin pentagon (
+    $size: $DEFAULT_SIZE*0.59,
+    $color: $DEFAULT_COLOR) {
+
+    position: relative;
+    width:    $size*1.08;
+    border-width: $size $size*0.36 0;
+    border-style: solid;
+    border-color: $color transparent;
+    margin-top:   $size*0.9;
+
+    &:before {
+        position: absolute;
+        height: 0;
+        width:  0;
+        top:  -$size*1.66;
+        left: -$size*0.36;
+        border-width: 0 $size*0.9 $size*0.7;
+        border-style: solid;
+        border-color: transparent transparent $color;
+        content: "";
+    }
+}
+
+/*----------------------------------------------------------
+六角形
+----------------------------------------------------------*/
+@mixin hexagon(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    width:         $size*2;
+    height:        $size*1.1;
+    background:    $color;
+    position:      relative;
+    margin-top:    $size*0.5+$margin;
+    margin-bottom: $size*0.5+$margin;
+
+    &:before {
+        position: absolute;
+        top:    -$size*0.48;
+        left:   0;
+        width:  0;
+        height: 0;
+        border-left:   $size solid transparent;
+        border-right:  $size solid transparent;
+        border-bottom: $size*0.5 solid $color;
+        content: "";
+    }
+    &:after {
+        position: absolute;
+        bottom: -$size*0.49;
+        left:   0;
+        width:  0;
+        height: 0;
+        border-left:  $size solid transparent;
+        border-right: $size solid transparent;
+        border-top:   $size*0.5 solid $color;
+        content: "";
+    }
+}
+
+/*----------------------------------------------------------
+八角形
+----------------------------------------------------------*/
+@mixin octagon(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR,
+    $subcolor: white) {
+
+    width:      $size;
+    height:     $size;
+    background: $color;
+    position:   relative;
+
+    &:before {
+        position: absolute;
+        top:  0;
+        left: 0;
+        border-bottom: $size*0.29 solid $color;
+        border-left:   $size*0.29 solid $subcolor;
+        border-right:  $size*0.2999 solid $subcolor;
+        width:  $size*0.42;
+        height: 0;
+        content: "";
+    }
+
+    &:after {
+        position: absolute;
+        bottom: 0;
+        left:   0;
+        border-top:   $size*0.29 solid $color;
+        border-left:  $size*0.29 solid $subcolor;
+        border-right: $size*0.2999 solid $subcolor;
+        width:  $size*0.42;
+        height: 0;
+        content: "";
+    }
+}
+
+/*----------------------------------------------------------
+ハート型
+----------------------------------------------------------*/
+@mixin heart(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR) {
+
+    position: relative;
+    width: $size*2;
+    height: $size*1.8;
+
+    &:before, &:after {
+        position: absolute;
+        content: "";
+        left: $size;
+        top: 0;
+        width: $size;
+        height: $size*1.6;
+        background: $color;
+        @include border-radius($size $size 0 0);
+        -webkit-transform: rotate(-45deg);
+           -moz-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+             -o-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+        -webkit-transform-origin: 0 100%;
+           -moz-transform-origin: 0 100%;
+            -ms-transform-origin: 0 100%;
+             -o-transform-origin: 0 100%;
+                transform-origin: 0 100%;
+    }
+    &:after {
+        left: 0;
+        -webkit-transform: rotate(45deg);
+           -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+             -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+        -webkit-transform-origin: 100% 100%;
+           -moz-transform-origin: 100% 100%;
+            -ms-transform-origin: 100% 100%;
+             -o-transform-origin: 100% 100%;
+                transform-origin: 100% 100%;
+    }
+}
+
+/*----------------------------------------------------------
+無限
+----------------------------------------------------------*/
+@mixin infinity(
+    $size: $DEFAULT_SIZE*0.23,
+    $color: $DEFAULT_COLOR) {
+
+    position: relative;
+    width:    $size*4.24;
+    height:   $size*2;
+
+    &:before, &:after {
+        position: absolute;
+        top:    0;
+        left:   0;
+        width:  $size*1.2;
+        height: $size*1.2;
+        border: $size*0.4 solid $color;
+        @include border-radius($size $size 0 $size);
+        -webkit-transform: rotate(-45deg);
+           -moz-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+             -o-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+        content: "";
+    }
+
+    &:after {
+        left:  auto;
+        right: 0;
+        @include border-radius($size $size $size 0);
+        -webkit-transform: rotate(45deg);
+           -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+             -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+    }
+}
+
+/*----------------------------------------------------------
+正方形 - 45度傾き
+----------------------------------------------------------*/
+@mixin diamond(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR) {
+
+    width:   0;
+    height:  0;
+    top:    -$size;
+    border:  $size solid transparent;
+    border-bottom-color: $color;
+    position: relative;
+
+    &:after {
+        position: absolute;
+        left:   -$size;
+        top:    $size;
+        width:  0;
+        height: 0;
+        border: $size solid transparent;
+        border-top-color: $color;
+        content: '';
+    }
+
+}
+
+/*----------------------------------------------------------
+ダイヤモンド
+----------------------------------------------------------*/
+@mixin shieldDiamond(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    width:   0;
+    height:  0;
+    top:    -$size;
+    border:  $size solid transparent;
+    border-bottom: $size*0.4 solid $color;
+    position: relative;
+    margin-bottom: $size*0.4 + $margin;
+
+    &:after {
+        width:   0;
+        height:  0;
+        top:     $size*0.4;
+        left:   -$size;
+        border:  $size solid transparent;
+        border-top: $size*1.4 solid $color;
+        position: absolute;
+        content: '';
+    }
+}
+
+/*----------------------------------------------------------
+カットダイヤモンド
+----------------------------------------------------------*/
+@mixin cutDiamond(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+        border-style: solid;
+        border-color: transparent transparent $color transparent;
+        border-width: 0 $size*0.5 $size*0.5 $size*0.5;
+        height: 0;
+        width: $size;
+        position: relative;
+        margin-top:    0px;
+        margin-left:   $margin;
+        margin-bottom: $size*1.4 + $margin;
+
+    &:after {
+        position: absolute;
+        top:   $size*0.49;
+        left: -$size*0.5;
+        width:  0;
+        height: 0;
+        border-style: solid;
+        border-color: $color transparent transparent transparent;
+        border-width: $size*1.4 $size 0 $size;
+        content: "";
+    }
+}
+
+/*----------------------------------------------------------
+卵
+----------------------------------------------------------*/
+@mixin egg(
+    $size: $DEFAULT_SIZE*0.4,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    display:block;
+    width: $size*2.52;
+    height: $size*3.6;
+    background-color: $color;
+    -webkit-border-radius: $size*1.26 $size*1.26 $size*1.26 $size*1.26 / $size*2.16 $size*2.16 $size*1.44 $size*1.44;
+    border-radius:         50%  50%  50%  50%  / 60%   60%   40%  40%;
+}
+
+/*----------------------------------------------------------
+パックマン
+----------------------------------------------------------*/
+@mixin pacman(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    width:  0px;
+    height: 0px;
+    border-right:  $size*1.2 solid transparent;
+    border-top:    $size*1.2 solid $color;
+    border-left:   $size*1.2 solid $color;
+    border-bottom: $size*1.2 solid $color;
+    @include border-radius($size*1.2);
+}
+
+/*----------------------------------------------------------
+吹き出し
+----------------------------------------------------------*/
+@mixin talkbubble(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    width:  $size*2.4;
+    height: $size*1.6;
+    background: $color;
+    position: relative;
+    @include border-radius($size*0.2);
+
+    &:before {
+        position: absolute;
+        right:  100%;
+        top:    $size*0.52;
+        width:  0;
+        height: 0;
+        border-top:    $size*0.26 solid transparent;
+        border-right:  $size*0.52 solid $color;
+        border-bottom: $size*0.26 solid transparent;
+        content: "";
+    }
+}
+
+/*----------------------------------------------------------
+重要！ - 12頂点
+----------------------------------------------------------*/
+@mixin burst12(
+    $size: $DEFAULT_SIZE*0.48,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    background:     $color;
+    width:          $size*1.6;
+    height:         $size*1.6;
+    position:       relative;
+    text-align:     center;
+    margin-top:     $size*0.2 + $margin;
+    margin-left:    $size*0.3 + $margin;
+    margin-bottom:  $size*0.2 + $margin;
+
+    &:before, &:after {
+        content: "";
+        position: absolute;
+        top:    0;
+        left:   0;
+        height: $size*1.6;
+        width:  $size*1.6;
+        background: $color;
+    }
+    &:before {
+        -webkit-transform: rotate(30deg);
+           -moz-transform: rotate(30deg);
+            -ms-transform: rotate(30deg);
+             -o-transform: rotate(30deg);
+    }
+    &:after {
+        -webkit-transform: rotate(60deg);
+           -moz-transform: rotate(60deg);
+            -ms-transform: rotate(60deg);
+             -o-transform: rotate(60deg);
+    }
+}
+
+
+/*----------------------------------------------------------
+重要！ - 8頂点
+----------------------------------------------------------*/
+@mixin burst8(
+    $size: $DEFAULT_SIZE*0.48,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    background: $color;
+    width:  $size*1.6;
+    height: $size*1.6;
+    position: relative;
+    text-align: center;
+    -webkit-transform: rotate(20deg);
+       -moz-transform: rotate(20deg);
+        -ms-transform: rotate(20deg);
+         -o-transform: rotate(20deg);
+    margin-top:     $size*0.2 + $margin;
+    margin-left:    $size*0.3 + $margin;
+    margin-bottom:  $size*0.2 + $margin;
+
+    &:before {
+        position: absolute;
+        top:  0;
+        left: 0;
+        height: $size*1.6;
+        width:  $size*1.6;
+        background: $color;
+        -webkit-transform: rotate(135deg);
+           -moz-transform: rotate(135deg);
+            -ms-transform: rotate(135deg);
+             -o-transform: rotate(135deg);
+        content: "";
+    }
+}
+
+
+/*----------------------------------------------------------
+陰陽
+----------------------------------------------------------*/
+@mixin yinyang(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR,
+    $subcolor: white,
+    $margin: 10px) {
+
+    width:  $size*1.92;
+    height: $size*0.96;
+    background:    $subcolor;
+    border-color:  $color;
+    border-style:  solid;
+    border-width:  $size*0.04 $size*0.04 $size $size*0.04;
+    @include border-radius(100%);
+    position: relative;
+
+    &:before {
+        position: absolute;
+        top:  50%;
+        left: 0;
+        background: $subcolor;
+        border: $size*0.36 solid $color;
+        @include border-radius(100%);
+        width:  $size*0.24;
+        height: $size*0.24;
+        content: "";
+    }
+
+    &:after {
+        position: absolute;
+        top:  50%;
+        left: 50%;
+        background: $color;
+        border: $size*0.36 solid $subcolor;
+        @include border-radius(100%);
+        width:  $size*0.24;
+        height: $size*0.24;
+        content: "";
+    }
+}
+
+
+
+/*----------------------------------------------------------
+バッジ
+----------------------------------------------------------*/
+@mixin badge(
+    $size: $DEFAULT_SIZE*0.5,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    position: relative;
+    background: $color;
+    height: $size*2;
+    width:  $size*2;
+    margin-bottom: $margin + $size*0.5;
+    @include border-radius($size);
+
+    &:before, &:after {
+        content: '';
+        position: absolute;
+        border-bottom: $size*1.4 solid $color;
+        border-left:   $size*0.8 solid transparent;
+        border-right:  $size*0.8 solid transparent;
+        top:   $size*1.4;
+        left: -$size*0.2;
+        -webkit-transform: rotate(-140deg);
+        -moz-transform:    rotate(-140deg);
+        -ms-transform:     rotate(-140deg);
+        -o-transform:      rotate(-140deg);
+    }
+
+    &:after {
+        left: auto;
+        right: -$size*0.2;
+        -webkit-transform: rotate(140deg);
+        -moz-transform:    rotate(140deg);
+        -ms-transform:     rotate(140deg);
+        -o-transform:      rotate(140deg);
+    }
+}
+
+
+
+
+/*----------------------------------------------------------
+インベーダー
+----------------------------------------------------------*/
+@mixin spaceInvader(
+    $size: $DEFAULT_SIZE,
+    $color: $DEFAULT_COLOR,
+    $margin: 10px) {
+
+    $size: $size / 11;
+
+    // インターポレーション使用箇所と未使用箇所が分かれているのは
+    // 配列先頭にインターポレーションを使用するとコンパイルエラーとなるため
+    box-shadow:
+        0              0              0   #{ $size     } $color,
+        0              #{ $size    }  0   #{ $size     } $color,
+        -$size*2.5     #{ $size*1.5}  0   #{ $size*0.5 } $color,
+         $size*2.5     #{ $size*1.5}  0   #{ $size*0.5 } $color,
+        -$size*3.0     #{-$size*3.0}  0   0              $color,
+         $size*3.0     #{-$size*3.0}  0   0              $color,
+        -$size*2.0     #{-$size*2.0}  0   0              $color,
+         $size*2.0     #{-$size*2.0}  0   0              $color,
+        -$size*3.0     #{-$size    }  0   0              $color,
+        -$size*2.0     #{-$size    }  0   0              $color,
+         $size*2.0     #{-$size    }  0   0              $color,
+         $size*3.0     #{-$size    }  0   0              $color,
+        -$size*4.0     0              0   0              $color,
+        -$size*3.0     0              0   0              $color,
+         $size*3.0     0              0   0              $color,
+         $size*4.0     0              0   0              $color,
+        -$size*5.0     #{ $size    }  0   0              $color,
+        -$size*4.0     #{ $size    }  0   0              $color,
+         $size*4.0     #{ $size    }  0   0              $color,
+         $size*5.0     #{ $size    }  0   0              $color,
+        -$size*5.0     #{ $size*2.0}  0   0              $color,
+         $size*5.0     #{ $size*2.0}  0   0              $color,
+        -$size*5.0     #{ $size*3.0}  0   0              $color,
+        -$size*3.0     #{ $size*3.0}  0   0              $color,
+         $size*3.0     #{ $size*3.0}  0   0              $color,
+         $size*5.0     #{ $size*3.0}  0   0              $color,
+        -$size*2.0     #{ $size*4.0}  0   0              $color,
+        -$size         #{ $size*4.0}  0   0              $color,
+         $size         #{ $size*4.0}  0   0              $color,
+         $size*2.0     #{ $size*4.0}  0   0              $color;
+
+    background: $color;
+    width:      $size*1.08;
+    height:     $size*1.08;
+    overflow:   hidden;
+
+    margin-top:    $size*3 + $margin;
+    margin-left:   $size*5 + $margin;
+    margin-bottom: $size*4 + $margin;
+}
+
+/*----------------------------------------------------------
+山括弧 (<,>)
+----------------------------------------------------------*/
+@mixin bracketLeft(
+    $triangle_size: $DEFAULT_SIZE,
+    $color:         $DEFAULT_COLOR,
+    $subcolor:      white) {
+
+    position: relative;
+    @include triangleLeftMini($triangle_size, $color) { @content; }
+    left: - $triangle_size / 2;
+    &:after {
+        position: absolute;
+        @include triangleLeftMini($triangle_size, $subcolor);
+        left:    $triangle_size / 5;
+        bottom:  - $triangle_size / 2;
+        content: '';
+    }
+}
+
+@mixin bracketRight(
+    $triangle_size: $DEFAULT_SIZE,
+    $color:         $DEFAULT_COLOR,
+    $subcolor:      white) {
+
+    position: relative;
+    @include triangleRightMini($triangle_size, $color) { @content; }
+    right:    - $triangle_size / 2;
+    &:after {
+        position: absolute;
+        @include triangleRightMini($triangle_size, $subcolor);
+        right:    $triangle_size / 5;
+        bottom:   - $triangle_size / 2;
+        content: '';
+    }
+}
+
 
